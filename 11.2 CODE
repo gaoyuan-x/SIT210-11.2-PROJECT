@@ -1,0 +1,26 @@
+int led = D7;
+int led1 = D6;
+int soil = A1;
+void setup() {
+    pinMode(soil, INPUT);
+    pinMode(led, OUTPUT);
+    pinMode(led1, OUTPUT);
+}
+
+void loop() {
+    int moisture = analogRead(soil);
+    Particle.publish("moisture",String(moisture),PRIVATE);
+    if(moisture <1300){
+        digitalWrite(led1, HIGH);//red led will turn on to remind user water the plant
+        delay(30000);
+        digitalWrite(led1, LOW);
+        
+        Particle.publish("dry","This plant need to water!");
+    }
+    else if(moisture >1300){
+        digitalWrite(led, HIGH);//green will turn on it means have enough water
+        delay(30000);
+        digitalWrite(led, LOW);
+        Particle.publish("wet","This plant have enough water!");
+    }
+    delay(30000);//every 30 seconds do this again.
